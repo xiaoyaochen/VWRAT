@@ -55,7 +55,7 @@ post以下数据，返回200响应码
             "params.resource.loader.enabled": "true"
             }
         }
-![1573482566107](\image\1573482566107.png)
+![1573482566107](image\1573482566107.png)
 
 构造paloayer实现rce:
 
