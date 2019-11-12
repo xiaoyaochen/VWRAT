@@ -1,3 +1,8 @@
+---
+typora-copy-images-to: image
+typora-root-url: image
+---
+
 # Apache Solr Velocity模板注入RCE漏洞复现
 
 ## 一、前言
@@ -25,11 +30,13 @@ https://mirrors.tuna.tsinghua.edu.cn/apache/lucene/solr/
 
 解压压缩包，启动solr
 
-![1573479758591](image\1573479758591.png)
+![1573479758591](1573479758591.png)
 
 访问http://127.0.0.1:8983/solr/#/~cores/new_core，添加new_core
 
-![](image\1573479895996.png)
+![](1573479895996.png)
+
+
 
 ## 四、漏洞复现
 
